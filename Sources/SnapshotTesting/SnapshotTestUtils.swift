@@ -159,12 +159,20 @@ public class SnapshotTestUtils {
     }
 }
 
+extension ViewImageConfig {
+    /// Convenience dark mode modifier of existing view image config
+    public var darkMode: ViewImageConfig {
+        var result = self
+        result.traits = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark), self.traits])
+        return result
+
+    }
+}
+
 extension SnapshotTestUtils.ImageConfig {
     /// Convenience dark mode modifier of existing image config
     public var darkMode: SnapshotTestUtils.ImageConfig {
-        var imageConfig = imageConfig
-        imageConfig.traits = UITraitCollection(traitsFrom: [.init(userInterfaceStyle: .dark), imageConfig.traits])
-        return SnapshotTestUtils.ImageConfig(imageConfig: imageConfig, name: name)
+        return SnapshotTestUtils.ImageConfig(imageConfig: imageConfig.darkMode, name: name)
     }
 }
 
