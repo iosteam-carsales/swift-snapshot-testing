@@ -13,7 +13,7 @@ import UIKit
 public class SnapshotTestUtils {
 
     /// Whether or not to record all new reference images
-    public static let isRecording = false
+    public static var isRecording = false
     /// NOTE: All snapshots should be recorded using a iPhone 15 Pro 17.0.1 simulator, same device as CI/CD
 
     /// The recommeneded accessibility sizes to use for snapshot tests
