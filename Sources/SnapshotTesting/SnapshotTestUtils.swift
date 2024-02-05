@@ -30,8 +30,8 @@ public class SnapshotTestUtils {
     ]
 
     public struct ImageConfig {
-        let imageConfig: ViewImageConfig
-        let name: String
+        public let imageConfig: ViewImageConfig
+        public let name: String
 
         public init(imageConfig: ViewImageConfig, name: String) {
             self.imageConfig = imageConfig
