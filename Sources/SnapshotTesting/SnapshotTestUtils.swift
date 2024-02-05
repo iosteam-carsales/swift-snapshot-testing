@@ -220,7 +220,7 @@ extension utsname {
     }
 
     /// Whether the physical machine running this code is ARM64
-    static var arm64: Bool {
+    public static var arm64: Bool {
         machineName == "arm64"
     }
 }
