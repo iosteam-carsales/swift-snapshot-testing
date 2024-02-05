@@ -32,6 +32,11 @@ public class SnapshotTestUtils {
     public struct ImageConfig {
         let imageConfig: ViewImageConfig
         let name: String
+
+        public init(imageConfig: ViewImageConfig, name: String) {
+            self.imageConfig = imageConfig
+            self.name = name
+        }
     }
 
     /// The precision used during image comparisons. We can only use 100% here if allowing subpixel threshold > 0
