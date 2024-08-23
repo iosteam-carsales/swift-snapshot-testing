@@ -89,6 +89,7 @@ public class SnapshotTestUtils {
                                        typeSize: DynamicTypeSize = .large,
                                        doccTypeSizes: [DynamicTypeSize] = [],
                                        useTemporaryWindow: Bool = false,
+                                       perceptualPrecision: Float = SnapshotTestUtils.perceptualPrecision,
                                        file: StaticString = #file,
                                        testName: String = #function,
                                        line: UInt = #line) async throws {
@@ -132,7 +133,7 @@ public class SnapshotTestUtils {
 
             // Assert view controller content as single image
             assertSnapshot(matching: viewController,
-                           as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig)),
+                           as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig, perceptualPrecision: perceptualPrecision)),
                            record: isRecording,
                            file: file,
                            testName: combinedTestName(for: testName, config: config, typeSize: typeSize, doccTypeSizes: doccTypeSizes),
@@ -147,7 +148,7 @@ public class SnapshotTestUtils {
                 for page in 1..<pages {
                     scrollView.setContentOffset(CGPoint(x: 0, y: page * pageSize), animated: false)
                     assertSnapshot(matching: viewController,
-                                   as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig)),
+                                   as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig, perceptualPrecision: perceptualPrecision)),
                                    record: isRecording,
                                    file: file,
                                    testName: combinedTestName(for: testName, config: config, typeSize: typeSize, doccTypeSizes: doccTypeSizes),
@@ -180,13 +181,14 @@ extension Snapshotting where Value == UIViewController, Format == UIImage {
     /// Custom snapshotting strategy to save space
     public static func reducedImage(
         on config: ViewImageConfig,
+        perceptualPrecision: Float,
         traits: UITraitCollection = .init()
     )
     -> Snapshotting {
         // Snapshot requiring 100% match, but allowing minor subpixel deviation
         let base = Snapshotting<UIViewController, UIImage>.image(on: config,
                                                                  precision: SnapshotTestUtils.precision,
-                                                                 perceptualPrecision: SnapshotTestUtils.perceptualPrecision,
+                                                                 perceptualPrecision: perceptualPrecision,
                                                                  size: nil,
                                                                  traits: traits)
         return Snapshotting<UIViewController, UIImage>(pathExtension: base.pathExtension, diffing: base.diffing) { value in
