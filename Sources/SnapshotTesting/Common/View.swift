@@ -1075,13 +1075,12 @@
     }
 
     private func getKeyWindow() -> UIWindow? {
-      var window: UIWindow?
-      if #available(iOS 13.0, *) {
-        window = UIApplication.sharedIfAvailable?.windows.first { $0.isKeyWindow }
-      } else {
-        window = UIApplication.sharedIfAvailable?.keyWindow
-      }
-      return window
+        UIApplication
+            .shared
+            .connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .last { $0.isKeyWindow }
     }
 
     private final class Window: UIWindow {

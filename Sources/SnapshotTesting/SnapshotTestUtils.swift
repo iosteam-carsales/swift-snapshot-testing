@@ -132,7 +132,7 @@ public class SnapshotTestUtils {
             }
 
             // Assert view controller content as single image
-            assertSnapshot(matching: viewController,
+            assertSnapshot(of: viewController,
                            as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig, perceptualPrecision: perceptualPrecision)),
                            record: isRecording,
                            file: file,
@@ -147,7 +147,7 @@ public class SnapshotTestUtils {
                 let pages = Int((scrollView.contentSize.height / CGFloat(pageSize)).rounded(.up))
                 for page in 1..<pages {
                     scrollView.setContentOffset(CGPoint(x: 0, y: page * pageSize), animated: false)
-                    assertSnapshot(matching: viewController,
+                    assertSnapshot(of: viewController,
                                    as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig, perceptualPrecision: perceptualPrecision)),
                                    record: isRecording,
                                    file: file,
