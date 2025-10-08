@@ -117,7 +117,8 @@ public class SnapshotTestUtils {
                 if let configSize = config.imageConfig.size {
                     size.width = configSize.width
                 }
-                let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+                let window = CustomTraitWindow(config: config.imageConfig)
+                window.frame = CGRect(origin: .zero, size: size)
                 window.rootViewController = viewController
 
                 viewController.beginAppearanceTransition(true, animated: false)
