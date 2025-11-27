@@ -130,7 +130,7 @@ public class SnapshotTestUtils {
                 window.makeKeyAndVisible()
 
                 // Wait for layout to complete on view
-                try await Task.sleep(seconds: tempWindowDelay)
+                try await Task.sleep(nanoseconds: UInt64(tempWindowDelay * 1000_000_000))
             }
 
             // Assert view controller content as single image
