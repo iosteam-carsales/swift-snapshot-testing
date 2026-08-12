@@ -48,7 +48,7 @@ public class SnapshotTestUtils {
 
     /// Delay to wait for UI to render before snapshotting
     public static let renderDelay: UInt64 = 100_000_000 // 100ms
-    public static let windowDelay: UInt64 = 500_000_000 // 500ms
+    public static let windowDelay: CGFloat = 1 // 1s
     public static let snapshotDelay: CGFloat = 0.1 // 100ms
 
     // Simulated device configurations
@@ -89,6 +89,7 @@ public class SnapshotTestUtils {
                                        typeSize: DynamicTypeSize = .large,
                                        doccTypeSizes: [DynamicTypeSize] = [],
                                        useTemporaryWindow: Bool = false,
+                                       tempWindowDelay: CGFloat = SnapshotTestUtils.windowDelay,
                                        perceptualPrecision: Float = SnapshotTestUtils.perceptualPrecision,
                                        file: StaticString = #file,
                                        testName: String = #function,
@@ -129,7 +130,7 @@ public class SnapshotTestUtils {
                 window.makeKeyAndVisible()
 
                 // Wait for layout to complete on view
-                try await Task.sleep(nanoseconds: windowDelay)
+                try await Task.sleep(nanoseconds: UInt64(tempWindowDelay * 1000_000_000))
             }
 
             // Assert view controller content as single image
