@@ -145,9 +145,10 @@ public class SnapshotTestUtils {
             // offset of the scrollview for safe areas (post being added to snapshot window)
             if let scrollView = scrollViewAccessor(viewController), let size = config.imageConfig.size {
                 let scrollViewOrigin = scrollView.convert(scrollView.frame, to: viewController.view).origin
-                let pageSize = Int(size.height - scrollViewOrigin.y)
+                let pageSize = max(1, Int(size.height - scrollViewOrigin.y))
                 let pages = Int((scrollView.contentSize.height / CGFloat(pageSize)).rounded(.up))
-                for page in 1..<pages {
+                // contentSize can be zero when async content never loaded — an empty range beats a trap
+                for page in 1..<max(pages, 1) {
                     scrollView.setContentOffset(CGPoint(x: 0, y: page * pageSize), animated: false)
                     assertSnapshot(of: viewController,
                                    as: .wait(for: snapshotDelay, on: .reducedImage(on: config.imageConfig, perceptualPrecision: perceptualPrecision)),
