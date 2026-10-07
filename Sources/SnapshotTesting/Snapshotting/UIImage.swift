@@ -28,19 +28,20 @@
       let toData: (UIImage) -> Data = { $0.pngData() ?? emptyImage().pngData()! }
       return .diff(
         toData: toData,
-        fromData: { UIImage(data: $0, scale: imageScale)! }
+        fromData: { UIImage(data: $0, scale: imageScale) ?? UIImage() }
       ) { old, new in
         guard
           let message = compare(
             old, new, precision: precision, perceptualPrecision: perceptualPrecision)
         else { return nil }
-        let difference = SnapshotTesting.diff(old, new)
         let isEmptyImage = new.size == .zero
-        let referenceAttachment = DiffAttachment.data(toData(old), name: "reference.png")
         let failureAttachment = DiffAttachment.data(
           toData(isEmptyImage ? emptyImage() : new),
           name: "failure.png"
         )
+        guard old.cgImage != nil else { return (message, [failureAttachment]) }
+        let difference = SnapshotTesting.diff(old, new)
+        let referenceAttachment = DiffAttachment.data(toData(old), name: "reference.png")
         let differenceAttachment = DiffAttachment.data(toData(difference), name: "difference.png")
         return (
           message,
@@ -96,7 +97,10 @@
     -> String?
   {
     guard let oldCgImage = old.cgImage else {
-      return "Reference image could not be loaded."
+      return """
+        Reference image could not be decoded (is it an un-pulled Git LFS pointer? \
+        run `git lfs pull --include="*" --exclude=""`)
+        """
     }
     guard let newCgImage = new.cgImage else {
       return "Newly-taken snapshot could not be loaded."

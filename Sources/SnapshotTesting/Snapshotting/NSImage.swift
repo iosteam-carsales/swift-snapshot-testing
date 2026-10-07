@@ -18,12 +18,16 @@
     public static func image(precision: Float = 1, perceptualPrecision: Float = 1) -> Diffing {
       return .diff(
         toData: { NSImagePNGRepresentation($0)! },
-        fromData: { NSImage(data: $0)! }
+        fromData: { NSImage(data: $0) ?? NSImage() }
       ) { old, new in
         guard
           let message = compare(
             old, new, precision: precision, perceptualPrecision: perceptualPrecision)
         else { return nil }
+        guard old.cgImage(forProposedRect: nil, context: nil, hints: nil) != nil else {
+          let attachments = NSImagePNGRepresentation(new).map { [DiffAttachment.data($0, name: "failure.png")] } ?? []
+          return (message, attachments)
+        }
         let difference = SnapshotTesting.diff(old, new)
         let oldAttachment = DiffAttachment.data(NSImagePNGRepresentation(old)!, name: "reference.png")
         let newAttachment = DiffAttachment.data(NSImagePNGRepresentation(new)!, name: "failure.png")
@@ -71,7 +75,10 @@
     -> String?
   {
     guard let oldCgImage = old.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-      return "Reference image could not be loaded."
+      return """
+        Reference image could not be decoded (is it an un-pulled Git LFS pointer? \
+        run `git lfs pull --include="*" --exclude=""`)
+        """
     }
     guard let newCgImage = new.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
       return "Newly-taken snapshot could not be loaded."
