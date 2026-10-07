@@ -47,9 +47,9 @@ public class SnapshotTestUtils {
     public static let perceptualPrecision: Float = utsname.arm64 ? 1.0 : 0.8
 
     /// Delay to wait for UI to render before snapshotting
-    public static let renderDelay: UInt64 = 100_000_000 // 100ms
-    public static let windowDelay: CGFloat = 1 // 1s
-    public static let snapshotDelay: CGFloat = 0.1 // 100ms
+    public static let renderDelay: UInt64 = 50_000_000 // 50ms
+    public static let windowDelay: CGFloat = 0.25 // 250ms
+    public static let snapshotDelay: CGFloat = 0.05 // 50ms
 
     // Simulated device configurations
     public static let iPhoneConfig = ImageConfig(imageConfig: .iPhone13ProMax, name: "iPhone")
