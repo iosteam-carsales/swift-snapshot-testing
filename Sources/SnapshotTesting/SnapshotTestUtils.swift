@@ -48,7 +48,7 @@ public class SnapshotTestUtils {
 
     /// Delay to wait for UI to render before snapshotting
     public static let renderDelay: UInt64 = 50_000_000 // 50ms
-    public static let windowDelay: CGFloat = 0.25 // 250ms
+    public static let windowDelay: CGFloat = 1 // 1s
     public static let snapshotDelay: CGFloat = 0.05 // 50ms
 
     // Simulated device configurations
