@@ -1089,7 +1089,17 @@
       init(config: ViewImageConfig, viewController: UIViewController) {
         let size = config.size ?? viewController.view.bounds.size
         self.config = config
-        super.init(frame: .init(origin: .zero, size: size))
+        // When tests run inside a scene (apps built with Xcode 27 must use scenes to launch on iOS 27), SwiftUI only
+        // draws content in windows attached to that scene, so without this parts of the snapshot come out blank.
+        // The window still uses the snapshot device's size and safe area. Tests without a scene work as before.
+        if let windowScene = UIApplication.sharedIfAvailable?.connectedScenes
+          .compactMap({ $0 as? UIWindowScene }).first
+        {
+          super.init(windowScene: windowScene)
+          self.frame = .init(origin: .zero, size: size)
+        } else {
+          super.init(frame: .init(origin: .zero, size: size))
+        }
 
         // NB: Safe area renders inaccurately for UI{Navigation,TabBar}Controller.
         // Fixes welcome!
